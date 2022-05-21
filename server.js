@@ -17,6 +17,22 @@ const requestListener = async (req, res) => {
         'Access-Control-Allow-Methods': 'PATCH, POST, GET, OPTIONS, DELETE',
         'Content-Type': 'application/json'
     }
+    if (req.url === '/posts' && req.method === 'GET') {
+        const posts = await Post.find();
+        res.writeHead(200, headers);
+        res.write(JSON.stringify({
+            'status': 'success',
+            posts,
+        }))
+        res.end();
+    } else {
+        res.writeHead(404, headers);
+        res.write(JSON.stringify({
+            'status': 'false',
+            'message': '無此網站路由'
+        }))
+        res.end();
+    }
 }
 
 const server = http.createServer(requestListener);
