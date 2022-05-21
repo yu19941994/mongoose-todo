@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "watch": "nodemon server.js"
+    "start": "node bin/www",
+    "watch": "nodemon bin/www"
   },
   "engines": {
     "node": "v14.19.2"

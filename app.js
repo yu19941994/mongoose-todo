@@ -1,8 +1,8 @@
-const http = require('http');
+// const http = require('http');
 const Post = require('./models/post');
 require('./connections');
 
-const requestListener = async (req, res) => {
+const app = async (req, res) => {
     let body = '';
     req.on('data', chunk => {
         body += chunk;
@@ -112,5 +112,6 @@ const requestListener = async (req, res) => {
     }
 }
 
-const server = http.createServer(requestListener);
-server.listen(process.env.PORT);
+// const server = http.createServer(requestListener);
+// server.listen(process.env.PORT);
+module.exports = app;
