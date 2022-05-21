@@ -42,6 +42,7 @@ const requestListener = async (req, res) => {
                     'status': 'success',
                     posts: newPost
                 }))
+                res.end();
             } catch (error) {
                 res.writeHead(400, headers);
                 res.write(JSON.stringify({
@@ -49,6 +50,7 @@ const requestListener = async (req, res) => {
                     'message': '欄位不正確，或無此 ID',
                     'error': error
                 }))
+                res.end();
             }
         })
     } else if (req.url.startsWith('/posts') && req.method === 'PATCH') {
