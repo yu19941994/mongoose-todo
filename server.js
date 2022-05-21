@@ -1,8 +1,15 @@
 const http = require('http');
 const mongoose = require('mongoose');
-const Post = require('./models/post')
+const Post = require('./models/post');
+const dotenv = require('dotenv');
 
-mongoose.connect('mongodb://localhost:27017/posttest')
+dotenv.config({ path: "./config.env" });
+const DB = process.env.DATABASE.replace(
+    '<password>',
+    process.env.DATABASE_PASSWORD
+)
+
+mongoose.connect(DB)
 .then(() => console.log('connect success'))
 .catch((err) => console.log(err.reason))
 
@@ -94,6 +101,15 @@ const requestListener = async (req, res) => {
             posts: []
         }))
         res.end();
+    } else if (req.url.startsWith('/posts') && req.method === 'DELETE') { 
+        const id = req.url.split('/').pop();
+        await Post.findByIdAndDelete(id);
+        res.writeHead(200, headers);
+        res.write(JSON.stringify({
+            'status': 'success',
+            posts: null
+        }))
+        res.end();
     } else if (req.url === '/posts' && req.method === 'OPTIONS') {
         res.writeHead(200, headers);
         res.end();
@@ -108,4 +124,4 @@ const requestListener = async (req, res) => {
 }
 
 const server = http.createServer(requestListener);
-server.listen(3005);
+server.listen(process.env.PORT);
