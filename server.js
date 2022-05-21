@@ -1,5 +1,6 @@
 const http = require('http');
 const mongoose = require('mongoose');
+const Post = require('./models/post')
 
 mongoose.connect('mongodb://localhost:27017/posttest')
 .then(() => console.log('connect success'))
