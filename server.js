@@ -51,6 +51,39 @@ const requestListener = async (req, res) => {
                 }))
             }
         })
+    } else if (req.url.startsWith('/posts') && req.method === 'PATCH') {
+        req.on('end', async() => {
+            try {
+                const content = JSON.parse(body).content;
+                const id = req.url.split('/').pop();
+                if (content !== undefined) {
+                    await Post.findByIdAndUpdate(id, { content })
+                    const posts = await Post.find();
+                    res.writeHead(200, headers);
+                    res.write(JSON.stringify({
+                        'status': 'success',
+                        posts,
+                    }))
+                    res.end();
+                } else {
+                    res.writeHead(400, headers);
+                    res.write(JSON.stringify({
+                        'status': 'false',
+                        'message': '欄位不正確，或無此 ID',
+                        'error': error
+                    }))
+                    res.end();
+                }
+            } catch (error) {
+                res.writeHead(400, headers);
+                res.write(JSON.stringify({
+                    'status': 'false',
+                    'message': '欄位不正確，或無此 ID',
+                    'error': error
+                }))
+                res.end();
+            }
+        })
     } else if (req.url === '/posts' && req.method === 'DELETE') {
         await Post.deleteMany({});
         res.writeHead(200, headers);
