@@ -25,6 +25,32 @@ const requestListener = async (req, res) => {
             posts,
         }))
         res.end();
+    } else if (req.url === '/posts' && req.method === 'POST') {
+        req.on('end', async() => {
+            try {
+                const data = JSON.parse(body);
+                const newPost = await Post.create(
+                    {
+                        content: data.content,
+                        image: data.image,
+                        name: data.name,
+                        likes: data.likes
+                    }
+                )
+                res.writeHead(200, headers);
+                res.write(JSON.stringify({
+                    'status': 'success',
+                    posts: newPost
+                }))
+            } catch (error) {
+                res.writeHead(400, headers);
+                res.write(JSON.stringify({
+                    'status': 'false',
+                    'message': '欄位不正確，或無此 ID',
+                    'error': error
+                }))
+            }
+        })
     } else {
         res.writeHead(404, headers);
         res.write(JSON.stringify({
