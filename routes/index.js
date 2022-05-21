@@ -1,24 +1,15 @@
 const Post = require('../models/post');
+const handleSuccess = require('../service/handleSuccess');
+const handleError = require('../service/handleError');
 
 const routes = async (req, res) => {
     let body = '';
     req.on('data', chunk => {
         body += chunk;
     })
-    const headers = {
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization, Content-Length, X-Requested-With',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'PATCH, POST, GET, OPTIONS, DELETE',
-        'Content-Type': 'application/json'
-    }
     if (req.url === '/posts' && req.method === 'GET') {
         const posts = await Post.find();
-        res.writeHead(200, headers);
-        res.write(JSON.stringify({
-            'status': 'success',
-            posts,
-        }))
-        res.end();
+        handleSuccess(res, 'success', posts);
     } else if (req.url === '/posts' && req.method === 'POST') {
         req.on('end', async() => {
             try {
@@ -31,20 +22,9 @@ const routes = async (req, res) => {
                         likes: data.likes
                     }
                 )
-                res.writeHead(200, headers);
-                res.write(JSON.stringify({
-                    'status': 'success',
-                    posts: newPost
-                }))
-                res.end();
+                handleSuccess(res, 'success', newPost);
             } catch (error) {
-                res.writeHead(400, headers);
-                res.write(JSON.stringify({
-                    'status': 'false',
-                    'message': '欄位不正確，或無此 ID',
-                    'error': error
-                }))
-                res.end();
+                handleError(res, 400, 'false', '欄位不正確，或無此 ID', error);
             }
         })
     } else if (req.url.startsWith('/posts') && req.method === 'PATCH') {
@@ -55,58 +35,25 @@ const routes = async (req, res) => {
                 if (content !== undefined) {
                     await Post.findByIdAndUpdate(id, { content })
                     const posts = await Post.find();
-                    res.writeHead(200, headers);
-                    res.write(JSON.stringify({
-                        'status': 'success',
-                        posts,
-                    }))
-                    res.end();
+                    handleSuccess(res, 'success', posts);
                 } else {
-                    res.writeHead(400, headers);
-                    res.write(JSON.stringify({
-                        'status': 'false',
-                        'message': '欄位不正確，或無此 ID',
-                        'error': error
-                    }))
-                    res.end();
+                    handleError(res, 400, 'false', '欄位不正確，或無此 ID');
                 }
             } catch (error) {
-                res.writeHead(400, headers);
-                res.write(JSON.stringify({
-                    'status': 'false',
-                    'message': '欄位不正確，或無此 ID',
-                    'error': error
-                }))
-                res.end();
+                handleError(res, 400, 'false', '欄位不正確，或無此 ID', error);
             }
         })
     } else if (req.url === '/posts' && req.method === 'DELETE') {
         await Post.deleteMany({});
-        res.writeHead(200, headers);
-        res.write(JSON.stringify({
-            'status': 'success',
-            posts: []
-        }))
-        res.end();
+        handleSuccess(res, 'success', []);
     } else if (req.url.startsWith('/posts') && req.method === 'DELETE') { 
         const id = req.url.split('/').pop();
         await Post.findByIdAndDelete(id);
-        res.writeHead(200, headers);
-        res.write(JSON.stringify({
-            'status': 'success',
-            posts: null
-        }))
-        res.end();
+        handleSuccess(res, 'success', null);
     } else if (req.url === '/posts' && req.method === 'OPTIONS') {
-        res.writeHead(200, headers);
-        res.end();
+        handleSuccess(res);
     } else {
-        res.writeHead(404, headers);
-        res.write(JSON.stringify({
-            'status': 'false',
-            'message': '無此網站路由'
-        }))
-        res.end();
+        handleError(res, 404, 'false', '無此網站路由');
     }
 }
 
