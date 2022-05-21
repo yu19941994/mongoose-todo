@@ -9,7 +9,7 @@ const routes = async (req, res) => {
     })
     if (req.url === '/posts' && req.method === 'GET') {
         const posts = await Post.find();
-        handleSuccess(res, 'success', posts);
+        handleSuccess(res, posts);
     } else if (req.url === '/posts' && req.method === 'POST') {
         req.on('end', async() => {
             try {
@@ -24,7 +24,7 @@ const routes = async (req, res) => {
                 )
                 handleSuccess(res, 'success', newPost);
             } catch (error) {
-                handleError(res, 400, 'false', '欄位不正確，或無此 ID', error);
+                handleError(res, error);
             }
         })
     } else if (req.url.startsWith('/posts') && req.method === 'PATCH') {
@@ -35,25 +35,31 @@ const routes = async (req, res) => {
                 if (content !== undefined) {
                     await Post.findByIdAndUpdate(id, { content })
                     const posts = await Post.find();
-                    handleSuccess(res, 'success', posts);
+                    handleSuccess(res, posts);
                 } else {
-                    handleError(res, 400, 'false', '欄位不正確，或無此 ID');
+                    handleError(res);
                 }
             } catch (error) {
-                handleError(res, 400, 'false', '欄位不正確，或無此 ID', error);
+                handleError(res, error);
             }
         })
     } else if (req.url === '/posts' && req.method === 'DELETE') {
         await Post.deleteMany({});
-        handleSuccess(res, 'success', []);
+        handleSuccess(res, []);
     } else if (req.url.startsWith('/posts') && req.method === 'DELETE') { 
         const id = req.url.split('/').pop();
         await Post.findByIdAndDelete(id);
-        handleSuccess(res, 'success', null);
+        handleSuccess(res, null);
     } else if (req.url === '/posts' && req.method === 'OPTIONS') {
-        handleSuccess(res);
+        res.writeHead(200, headers);
+        res.end();
     } else {
-        handleError(res, 404, 'false', '無此網站路由');
+        res.writeHead(statusCode, headers);
+        res.write(JSON.stringify({
+            'status': 'false',
+            'message': '無此網路路由'
+        }))
+        res.end();
     }
 }
 
