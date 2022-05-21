@@ -51,6 +51,17 @@ const requestListener = async (req, res) => {
                 }))
             }
         })
+    } else if (req.url === '/posts' && req.method === 'DELETE') {
+        await Post.deleteMany({});
+        res.writeHead(200, headers);
+        res.write(JSON.stringify({
+            'status': 'success',
+            romms: []
+        }))
+        res.end();
+    } else if (req.url === '/posts' && req.method === 'OPTIONS') {
+        res.writeHead(200, headers);
+        res.end();
     } else {
         res.writeHead(404, headers);
         res.write(JSON.stringify({
