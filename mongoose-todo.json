@@ -1,0 +1,138 @@
+{
+	"info": {
+		"_postman_id": "56067cce-e01e-40e1-8ab4-1a3ffeca5655",
+		"name": "mongoose todo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "取得所有貼文",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://limitless-island-20218.herokuapp.com/posts",
+					"protocol": "https",
+					"host": [
+						"limitless-island-20218",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增貼文",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"content\": \"新增貼文\",\n\t\"name\": \"add post\"\n}"
+				},
+				"url": {
+					"raw": "https://limitless-island-20218.herokuapp.com/posts",
+					"protocol": "https",
+					"host": [
+						"limitless-island-20218",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "修改貼文",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"content\": \"修修改改\"\n}"
+				},
+				"url": {
+					"raw": "https://limitless-island-20218.herokuapp.com/posts/6292452f704805cf60e1ef59",
+					"protocol": "https",
+					"host": [
+						"limitless-island-20218",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"posts",
+						"6292452f704805cf60e1ef59"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除單筆貼文",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://limitless-island-20218.herokuapp.com/posts/6292452f704805cf60e1ef59",
+					"protocol": "https",
+					"host": [
+						"limitless-island-20218",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"posts",
+						"6292452f704805cf60e1ef59"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除全部貼文",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://limitless-island-20218.herokuapp.com/posts",
+					"protocol": "https",
+					"host": [
+						"limitless-island-20218",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
