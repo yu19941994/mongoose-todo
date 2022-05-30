@@ -22,7 +22,7 @@ const posts = {
                 )
                 handleSuccess(res, 'success', newPost);
             } else {
-               handleError(res, error); 
+               handleError(res);
             }
         } catch (error) {
             handleError(res, error);
