@@ -11,15 +11,19 @@ const posts = {
     async createPost({ body, req, res }) {
         try {
             const data = JSON.parse(body);
-            const newPost = await Post.create(
-                {
-                    content: data.content,
-                    image: data.image,
-                    name: data.name,
-                    likes: data.likes
-                }
-            )
-            handleSuccess(res, 'success', newPost);
+            if (data.content !== '') {
+                const newPost = await Post.create(
+                    {
+                        content: data.content,
+                        image: data.image,
+                        name: data.name,
+                        likes: data.likes
+                    }
+                )
+                handleSuccess(res, 'success', newPost);
+            } else {
+               handleError(res, error); 
+            }
         } catch (error) {
             handleError(res, error);
         }
@@ -28,7 +32,7 @@ const posts = {
         try {
             const content = JSON.parse(body).content;
             const id = url.split('/').pop();
-            if (content !== undefined) {
+            if (content !== undefined || content!== '') {
                 await Post.findByIdAndUpdate(id, { content })
                 const posts = await Post.find();
                 handleSuccess(res, posts);
