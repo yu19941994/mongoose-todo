@@ -32,7 +32,8 @@ const posts = {
         try {
             const content = JSON.parse(body).content;
             const id = url.split('/').pop();
-            if (content !== undefined || content!== '') {
+            const isIdExist = await Post.findOne({_id: id});
+            if ((!!isIdExist) && (content !== undefined || content!== '')) {
                 await Post.findByIdAndUpdate(id, { content })
                 const posts = await Post.find();
                 handleSuccess(res, posts);
@@ -49,8 +50,13 @@ const posts = {
     }, 
     async deletePost({ req, res, url }) {
         const id = url.split('/').pop();
-        await Post.findByIdAndDelete(id);
-        handleSuccess(res, null);
+        const isIdExist = await Post.findOne({_id: id});
+        if (!!isIdExist) {
+            await Post.findByIdAndDelete(id);
+            handleSuccess(res, null);
+        } else {
+            handleError(res);
+        }
     }
 }
 
