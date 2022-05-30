@@ -11,15 +11,19 @@ const posts = {
     async createPost({ body, req, res }) {
         try {
             const data = JSON.parse(body);
-            const newPost = await Post.create(
-                {
-                    content: data.content,
-                    image: data.image,
-                    name: data.name,
-                    likes: data.likes
-                }
-            )
-            handleSuccess(res, 'success', newPost);
+            if (data.content !== '') {
+                const newPost = await Post.create(
+                    {
+                        content: data.content,
+                        image: data.image,
+                        name: data.name,
+                        likes: data.likes
+                    }
+                )
+                handleSuccess(res, 'success', newPost);
+            } else {
+               handleError(res);
+            }
         } catch (error) {
             handleError(res, error);
         }
@@ -28,7 +32,8 @@ const posts = {
         try {
             const content = JSON.parse(body).content;
             const id = url.split('/').pop();
-            if (content !== undefined) {
+            const isIdExist = await Post.findOne({_id: id});
+            if ((!!isIdExist) && (content !== undefined || content!== '')) {
                 await Post.findByIdAndUpdate(id, { content })
                 const posts = await Post.find();
                 handleSuccess(res, posts);
@@ -44,9 +49,18 @@ const posts = {
         handleSuccess(res, []);
     }, 
     async deletePost({ req, res, url }) {
-        const id = url.split('/').pop();
-        await Post.findByIdAndDelete(id);
-        handleSuccess(res, null);
+        try {
+            const id = url.split('/').pop();
+            const isIdExist = await Post.findOne({_id: id});
+            if (!!isIdExist) {
+                await Post.findByIdAndDelete(id);
+                handleSuccess(res, null);
+            } else {
+                handleError(res);
+            }
+        } catch (error) {
+            handleError(res, error);
+        }
     }
 }
 
