@@ -49,13 +49,17 @@ const posts = {
         handleSuccess(res, []);
     }, 
     async deletePost({ req, res, url }) {
-        const id = url.split('/').pop();
-        const isIdExist = await Post.findOne({_id: id});
-        if (!!isIdExist) {
-            await Post.findByIdAndDelete(id);
-            handleSuccess(res, null);
-        } else {
-            handleError(res);
+        try {
+            const id = url.split('/').pop();
+            const isIdExist = await Post.findOne({_id: id});
+            if (!!isIdExist) {
+                await Post.findByIdAndDelete(id);
+                handleSuccess(res, null);
+            } else {
+                handleError(res);
+            }
+        } catch (error) {
+            handleError(res, error);
         }
     }
 }
