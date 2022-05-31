@@ -33,7 +33,7 @@ const posts = {
             const content = JSON.parse(body).content;
             const id = url.split('/').pop();
             const isIdExist = await Post.findOne({_id: id});
-            if ((!!isIdExist) && (content !== undefined || content!== '')) {
+            if ((!!isIdExist) && (!content)) {
                 await Post.findByIdAndUpdate(id, { content })
                 const posts = await Post.find();
                 handleSuccess(res, posts);
