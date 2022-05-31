@@ -11,7 +11,7 @@ const posts = {
     async createPost({ body, req, res }) {
         try {
             const data = JSON.parse(body);
-            if (data.content !== '') {
+            if (!data.content) {
                 const newPost = await Post.create(
                     {
                         content: data.content,
